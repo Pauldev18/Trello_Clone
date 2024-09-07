@@ -10,4 +10,6 @@ public interface TaskService {
     Task addTask(TaskDTO taskDTO);
     Task updateTask(Integer taskId, String userId);
     void deleteTask(Integer taskId);
+    Task updateTaskStatus(Integer taskId, String status);
+    Task updateTaskDescription(Integer taskId, String description);
 }

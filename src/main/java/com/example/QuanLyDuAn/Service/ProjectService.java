@@ -12,4 +12,5 @@ public interface ProjectService {
     Project createProject(ProjectDTO projectDTO);
     Project updateProject(Integer projectId, ProjectDTO projectDTO);
     void deleteProject(Integer projectId);
+    List<Project> getProjectsByUserId(String userId);
 }

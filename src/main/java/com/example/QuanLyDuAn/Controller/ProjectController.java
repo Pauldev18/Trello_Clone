@@ -58,4 +58,13 @@ public class ProjectController {
         }
         return ResponseEntity.notFound().build();
     }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Project>> getProjectsByUserId(@PathVariable String userId) {
+        List<Project> projects = projectService.getProjectsByUserId(userId);
+        if (!projects.isEmpty()) {
+            return ResponseEntity.ok(projects);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

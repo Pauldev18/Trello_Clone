@@ -41,7 +41,7 @@ public class TaskServiceImpl implements TaskService {
         task.setTaskName(taskDTO.getTaskName());
         task.setBoard(board);
         task.setDueDate(taskDTO.getDueDate());
-        task.setStatus("New"); // Default status
+        task.setStatus("PROCESS");
         return taskRepository.save(task);
     }
 
@@ -64,5 +64,29 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(Integer taskId) {
         taskRepository.deleteById(taskId);
+    }
+
+    @Override
+    public Task updateTaskStatus(Integer taskId, String status) {
+        Optional<Task> taskOpt = taskRepository.findById(taskId);
+        if (taskOpt.isPresent()) {
+            Task task = taskOpt.get();
+            task.setStatus(status);
+            task.setUpdatedAt(LocalDateTime.now()); // Update the updated_at field
+            return taskRepository.save(task);
+        }
+        return null;
+    }
+
+    @Override
+    public Task updateTaskDescription(Integer taskId, String description) {
+        Optional<Task> taskOpt = taskRepository.findById(taskId);
+        if (taskOpt.isPresent()) {
+            Task task = taskOpt.get();
+            task.setDescription(description);
+            task.setUpdatedAt(LocalDateTime.now()); // Update the updated_at field
+            return taskRepository.save(task);
+        }
+        return null;
     }
 }

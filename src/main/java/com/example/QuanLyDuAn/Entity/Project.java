@@ -39,5 +39,9 @@ public class Project {
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private Users owner;
+
+    @Transient
+    private double completionPercentage;
+
 }
 

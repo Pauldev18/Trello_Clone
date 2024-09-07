@@ -2,8 +2,10 @@ package com.example.QuanLyDuAn.Service.Impl;
 
 import com.example.QuanLyDuAn.DTO.ProjectDTO;
 import com.example.QuanLyDuAn.Entity.Project;
+import com.example.QuanLyDuAn.Entity.Task;
 import com.example.QuanLyDuAn.Entity.Users;
 import com.example.QuanLyDuAn.Repository.ProjectRepository;
+import com.example.QuanLyDuAn.Repository.TaskRepository;
 import com.example.QuanLyDuAn.Repository.UserRepository;
 import com.example.QuanLyDuAn.Service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TaskRepository taskRepository;
     @Override
     public List<Project> getAllProjects() {
         return projectRepository.findAll();
@@ -54,6 +58,16 @@ public class ProjectServiceImpl implements ProjectService {
         projectRepository.deleteById(projectId);
     }
 
+    @Override
+    public List<Project> getProjectsByUserId(String userId) {
+        List<Project> projects = projectRepository.findByOwnerId(userId);
+        for (Project project : projects) {
+            double completionPercentage = calculateCompletionPercentage(project.getProjectId());
+            project.setCompletionPercentage(completionPercentage);
+        }
+        return projects;
+    }
+
     private void mapDtoToEntity(ProjectDTO projectDTO, Project project) {
         project.setProjectName(projectDTO.getProjectName());
         project.setDescription(projectDTO.getDescription());
@@ -62,5 +76,18 @@ public class ProjectServiceImpl implements ProjectService {
 
         Optional<Users> owner = userRepository.findById(projectDTO.getOwnerId());
         owner.ifPresent(project::setOwner);
+    }
+    private double calculateCompletionPercentage(Integer projectId) {
+        List<Task> tasks = taskRepository.findByBoard_Project_ProjectId(projectId);
+
+        if (tasks.isEmpty()) {
+            return 0.0;
+        }
+
+        long completedTasksCount = tasks.stream()
+                .filter(task -> "COMPLETED".equalsIgnoreCase(task.getStatus()))
+                .count();
+
+        return (completedTasksCount / (double) tasks.size()) * 100.0;
     }
 }
