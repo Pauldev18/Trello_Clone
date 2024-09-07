@@ -29,6 +29,14 @@ public class UserProjectServiceImpl implements UserProjectService {
     public List<UserProject> listUserProjects() {
         return userProjectRepository.findAll();
     }
+    @Override
+    public List<UserProject> listUserProjectsByProjectId(Integer projectId) {
+        Project project = projectRepository.findById(projectId).orElse(null);
+        if (project == null) {
+            throw new IllegalArgumentException("Project not found");
+        }
+        return userProjectRepository.findByProject(project);
+    }
 
     @Override
     public UserProject addUserProject(UserProjectDTO userProjectDTO) {

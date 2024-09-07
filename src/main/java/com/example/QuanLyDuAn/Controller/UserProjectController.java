@@ -36,4 +36,9 @@ public class UserProjectController {
         userProjectService.deleteUserProject(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/project/{projectId}")
+    public List<UserProject> listUserProjectsByProjectId(@PathVariable Integer projectId) {
+        return userProjectService.listUserProjectsByProjectId(projectId);
+    }
 }

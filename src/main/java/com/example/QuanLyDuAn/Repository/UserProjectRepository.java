@@ -1,5 +1,6 @@
 package com.example.QuanLyDuAn.Repository;
 
+import com.example.QuanLyDuAn.Entity.Project;
 import com.example.QuanLyDuAn.Entity.UserProject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -11,4 +12,5 @@ public interface UserProjectRepository extends JpaRepository<UserProject, Intege
 
     List<UserProject> findByUserGmail(String gmail);
     List<UserProject> findByProjectProjectId(Integer projectId);
+    List<UserProject> findByProject(Project project);
 }
