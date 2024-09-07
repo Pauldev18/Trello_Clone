@@ -12,4 +12,5 @@ public interface TaskService {
     void deleteTask(Integer taskId);
     Task updateTaskStatus(Integer taskId, String status);
     Task updateTaskDescription(Integer taskId, String description);
+    Task moveTaskToBoard(Integer taskId, Integer newBoardId);
 }

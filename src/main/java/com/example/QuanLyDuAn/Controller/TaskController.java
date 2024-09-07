@@ -61,4 +61,13 @@ public class TaskController {
         }
         return ResponseEntity.notFound().build();
     }
+    @PutMapping("/{taskId}/move/{newBoardId}")
+    public ResponseEntity<Task> moveTaskToBoard(@PathVariable Integer taskId, @PathVariable Integer newBoardId) {
+        Task updatedTask = taskService.moveTaskToBoard(taskId, newBoardId);
+        if (updatedTask != null) {
+            return ResponseEntity.ok(updatedTask);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

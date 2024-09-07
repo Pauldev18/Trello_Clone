@@ -89,4 +89,18 @@ public class TaskServiceImpl implements TaskService {
         }
         return null;
     }
+    @Override
+    public Task moveTaskToBoard(Integer taskId, Integer newBoardId) {
+        Optional<Task> taskOpt = taskRepository.findById(taskId);
+        Optional<Board> boardOpt = boardRepository.findById(newBoardId);
+
+        if (taskOpt.isPresent() && boardOpt.isPresent()) {
+            Task task = taskOpt.get();
+            task.setBoard(boardOpt.get());  // Set the new board
+            task.setUpdatedAt(LocalDateTime.now()); // Update the timestamp
+            return taskRepository.save(task);  // Save the updated task
+        }
+
+        return null;  // Or throw an exception for not found
+    }
 }
