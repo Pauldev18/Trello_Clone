@@ -66,7 +66,13 @@ public class ProjectServiceImpl implements ProjectService {
         mapDtoToEntity(projectDTO, project);
         return projectRepository.save(project);
     }
-
+    @Override
+    public String getProjectNameByTaskId(Integer taskId) {
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new RuntimeException("Task not found"));
+        Project project = projectRepository.findById(task.getBoard().getProject().getProjectId())
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+        return project.getProjectName();
+    }
     @Override
     public Project updateProject(Integer projectId, ProjectDTO projectDTO) {
         Optional<Project> existingProjectOpt = projectRepository.findById(projectId);

@@ -2,8 +2,12 @@ package com.example.QuanLyDuAn.Controller;
 
 import com.example.QuanLyDuAn.DTO.TaskDTO;
 import com.example.QuanLyDuAn.Entity.Task;
+import com.example.QuanLyDuAn.Service.Impl.EmailService;
+import com.example.QuanLyDuAn.Service.ProjectService;
 import com.example.QuanLyDuAn.Service.TaskService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +19,10 @@ public class TaskController {
 
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private ProjectService projectService;
 
     // Retrieve tasks by board ID
     @GetMapping("/board/{boardId}")
@@ -34,8 +42,28 @@ public class TaskController {
     @PutMapping("/{taskId}")
     public ResponseEntity<Task> updateTask(@PathVariable Integer taskId, @RequestParam String userId) {
         Task updatedTask = taskService.updateTask(taskId, userId);
+
+
+
+
+        // Create the email subject and message
+        String subject = "Task Assignment: " + updatedTask.getTaskName();
+        String message = "<p>You have been assigned the task: <strong style='color:red;'>" + updatedTask.getTaskName() + "</strong>" +
+                "<br>Due Date: <strong style='color:red;'>" + updatedTask.getDueDate() + "</strong>" +
+                "<br>Project: <strong style='color:red;'>" + projectService.getProjectNameByTaskId(taskId) + "</strong></p>";
+
+
+        // Send email
+        try {
+            emailService.sendOtpMessage(userId, subject, message);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
         return ResponseEntity.ok(updatedTask);
     }
+
 
     // Delete a task by ID
     @DeleteMapping("/{taskId}")

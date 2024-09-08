@@ -16,4 +16,5 @@ public interface ProjectService {
     Project updateProject(Integer projectId, ProjectDTO projectDTO);
     void deleteProject(Integer projectId);
     public List<ProjectWithRoleDto> getProjectsByUserId(String userId);
+    public String getProjectNameByTaskId(Integer taskId);
 }
