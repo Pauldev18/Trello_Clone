@@ -1,6 +1,7 @@
 package com.example.QuanLyDuAn.Service.Impl;
 
 import com.example.QuanLyDuAn.DTO.ProjectDTO;
+import com.example.QuanLyDuAn.DTO.ProjectWithRoleDto;
 import com.example.QuanLyDuAn.Entity.Project;
 import com.example.QuanLyDuAn.Entity.Task;
 import com.example.QuanLyDuAn.Entity.Users;
@@ -59,14 +60,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> getProjectsByUserId(String userId) {
-        List<Project> projects = projectRepository.findByOwnerId(userId);
-        for (Project project : projects) {
-            double completionPercentage = calculateCompletionPercentage(project.getProjectId());
-            project.setCompletionPercentage(completionPercentage);
-        }
-        return projects;
+    public List<ProjectWithRoleDto> getProjectsByUserId(String userId) {
+        return projectRepository.findProjectsByUserIdWithRole(userId);
     }
+
 
     private void mapDtoToEntity(ProjectDTO projectDTO, Project project) {
         project.setProjectName(projectDTO.getProjectName());

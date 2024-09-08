@@ -1,6 +1,7 @@
 package com.example.QuanLyDuAn.Controller;
 
 import com.example.QuanLyDuAn.DTO.ProjectDTO;
+import com.example.QuanLyDuAn.DTO.ProjectWithRoleDto;
 import com.example.QuanLyDuAn.Entity.Project;
 import com.example.QuanLyDuAn.Service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,8 +60,8 @@ public class ProjectController {
         return ResponseEntity.notFound().build();
     }
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Project>> getProjectsByUserId(@PathVariable String userId) {
-        List<Project> projects = projectService.getProjectsByUserId(userId);
+    public ResponseEntity<List<ProjectWithRoleDto>> getProjectsByUserId(@PathVariable String userId) {
+        List<ProjectWithRoleDto> projects = projectService.getProjectsByUserId(userId);
         if (!projects.isEmpty()) {
             return ResponseEntity.ok(projects);
         } else {
