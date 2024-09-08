@@ -2,8 +2,10 @@ package com.example.QuanLyDuAn.Service.Impl;
 
 import com.example.QuanLyDuAn.DTO.ProjectDTO;
 import com.example.QuanLyDuAn.DTO.ProjectWithRoleDto;
+import com.example.QuanLyDuAn.DTO.ProjectWithUsersDto;
 import com.example.QuanLyDuAn.Entity.Project;
 import com.example.QuanLyDuAn.Entity.Task;
+import com.example.QuanLyDuAn.Entity.UserProject;
 import com.example.QuanLyDuAn.Entity.Users;
 import com.example.QuanLyDuAn.Repository.ProjectRepository;
 import com.example.QuanLyDuAn.Repository.TaskRepository;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -34,6 +37,27 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Optional<Project> getProjectById(Integer projectId) {
         return projectRepository.findById(projectId);
+    }
+
+    @Override
+    public Optional<ProjectWithUsersDto> getProjectDetails(Integer projectId) {
+        Project project = projectRepository.findProjectById(projectId);
+        List<UserProject> userProjects = projectRepository.findUserProjectsByProjectId(projectId);
+
+        if (project == null) {
+            return Optional.empty();
+        }
+
+        // Chuyển đổi danh sách UserProject thành danh sách người dùng với vai trò
+        List<ProjectWithUsersDto.UserWithRoleDto> usersWithRoles = userProjects.stream()
+                .map(up -> new ProjectWithUsersDto.UserWithRoleDto(
+                        up.getUser().getGmail(),
+                        up.getUser().getUserName(),
+                        up.getRole()
+                ))
+                .collect(Collectors.toList());
+
+        return Optional.of(new ProjectWithUsersDto(project, usersWithRoles));
     }
 
     @Override

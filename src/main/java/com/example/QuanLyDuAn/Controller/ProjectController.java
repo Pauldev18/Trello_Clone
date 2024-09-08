@@ -2,6 +2,7 @@ package com.example.QuanLyDuAn.Controller;
 
 import com.example.QuanLyDuAn.DTO.ProjectDTO;
 import com.example.QuanLyDuAn.DTO.ProjectWithRoleDto;
+import com.example.QuanLyDuAn.DTO.ProjectWithUsersDto;
 import com.example.QuanLyDuAn.Entity.Project;
 import com.example.QuanLyDuAn.Service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ public class ProjectController {
 
     // Get project by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Project> getProjectById(@PathVariable Integer id) {
-        Optional<Project> project = projectService.getProjectById(id);
+    public ResponseEntity<ProjectWithUsersDto> getProjectById(@PathVariable Integer id) {
+        Optional<ProjectWithUsersDto> project = projectService.getProjectDetails(id);
         return project.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
