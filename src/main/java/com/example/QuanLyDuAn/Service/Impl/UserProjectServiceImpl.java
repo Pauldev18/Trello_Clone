@@ -48,13 +48,22 @@ public class UserProjectServiceImpl implements UserProjectService {
             throw new IllegalArgumentException("Invalid user or project");
         }
 
+        // Check if the user-project combination already exists
+        boolean exists = userProjectRepository.existsByUserAndProject(user, project);
+        if (exists) {
+            throw new IllegalArgumentException("User is already assigned to this project");
+        }
+
+        // Create a new UserProject entity
         UserProject userProject = new UserProject();
         userProject.setUser(user);
         userProject.setProject(project);
         userProject.setRole(userProjectDTO.getRole());
 
+        // Save and return the new UserProject entity
         return userProjectRepository.save(userProject);
     }
+
 
     @Override
     public void deleteUserProject(Integer userProjectId) {
