@@ -62,5 +62,5 @@ create table tasks
     user_id varchar(255),
     board_id int not null,
     foreign key(user_id) references users(gmail) on delete set null,
-    foreign key(board_id) references boards(board_id)
+    foreign key(board_id) references boards(board_id) on delete cascade
 );
